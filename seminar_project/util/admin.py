@@ -1,8 +1,3 @@
 from django.contrib import admin
-from django.urls import path
 
-from . import views
-
-urlpatterns = [
-    path('', views.health),
-]
+# Register your models here.
