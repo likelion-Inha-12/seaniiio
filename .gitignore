@@ -3,3 +3,4 @@ seminarenv
 migrations
 .DS_Store
 __pycache__
+seminar_project/util/__pycache__/admin.cpython-310.pyc
