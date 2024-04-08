@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('health/', include('util.urls')), # util이라는 앱에서 사용하는 url은 항상 util.urls에서 관리해라
+    path('lion/', include('lionapp.urls')) # lionapp의 urls.py에 작성한 url들을 seminar_project/urls.py에서 관리해라
 ]
