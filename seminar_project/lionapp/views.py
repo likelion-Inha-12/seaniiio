@@ -1,6 +1,7 @@
 import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 
 from .models import *
 
@@ -42,3 +43,10 @@ def delete_post(request, pk):
         }
         return JsonResponse(data, status=200)
     return JsonResponse({'message':'DELETE 요청만 허용됩니다.'})
+
+# post에 대한 comment 가져오는 api
+def get_comment(request, post_id):
+    if request.method == 'GET':
+        post = get_object_or_404(Post, pk=post_id)
+        comment_list = post.comments.all() # Post에 comments필드가 있는 것은 아니지만, models.py에 related_name으로 정의해주었음. // comments => comment_set으로 변경해도 같은 기능을 하지만, relate_name을 설정해놓으면 작동 안함
+        return HttpResponse(comment_list, status=200)
