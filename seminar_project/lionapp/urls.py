@@ -10,5 +10,8 @@ urlpatterns = [
     path('comments/<int:post_id>/', views.get_comment),
     path('like/<int:post_id>/<int:user_id>/', views.post_like),
     path('likes/<int:post_id>/', views.get_like_count),
-    path('posts/', views.get_post_sorted)
+    path('posts/', views.get_post_sorted),
+    # week 5
+    path('v2/post',views.create_post_v2),
+    path('v2/post/<int:pk>',views.PostApiView.as_view())
 ]

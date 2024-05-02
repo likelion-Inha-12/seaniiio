@@ -3,6 +3,12 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serializers import PostSerializer
 from .models import *
 
 # POST api
@@ -100,3 +106,50 @@ def get_post_sorted(request):
 
         return HttpResponse(sorted_post_list, status=200)
 # sorted_posts = Post.objects.annotate(comment_count=Count('comments')).order_by('-comment_count') 
+
+# week 5
+def api_response(data, message, status):
+    response = {
+        "message":message,
+        "data":data
+    }
+    return Response(response, status=status)
+
+# FBV 이용
+@api_view(['POST'])
+def create_post_v2(request):
+
+    member_id = request.data.get('member_id')
+    member = get_object_or_404(Member, id = member_id)
+
+    post = Post(
+        title = request.data.get('title'),
+        content = request.data.get('content'),
+        member_id = member
+    )
+    post.save()
+
+    message = f"id: {post.pk}번 포스트 생성 성공"
+    return api_response(data = None, message = message, status = status.HTTP_201_CREATED)
+
+# CBV
+class PostApiView(APIView):
+
+    # pk를 이용해서 object들을 가져오는 메서드
+    def get_object(self, pk):
+        post = get_object_or_404(Post, pk=pk)
+        return post
+
+    def get(self, request, pk):
+        post = self.get_object(pk)
+
+        postSerializer = PostSerializer(post)
+        message = f"id: {post.pk}번 포스트 조회 성공"
+        return api_response(data = postSerializer.data, message = message, status = status.HTTP_200_OK)
+    
+    def delete(self, request, pk):
+        post = self.get_object(pk)
+        post.delete()
+        
+        message = f"id: {pk}번 포스트 삭제 성공"
+        return api_response(data = None, message = message, status = status.HTTP_200_OK) # 204여도 될 것 같아요
