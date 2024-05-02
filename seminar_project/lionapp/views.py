@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from util.views import api_response
 from .serializers import PostSerializer
 from .models import *
 
@@ -108,12 +109,6 @@ def get_post_sorted(request):
 # sorted_posts = Post.objects.annotate(comment_count=Count('comments')).order_by('-comment_count') 
 
 # week 5
-def api_response(data, message, status):
-    response = {
-        "message":message,
-        "data":data
-    }
-    return Response(response, status=status)
 
 # FBV 이용
 @api_view(['POST'])
