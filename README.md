@@ -1,4 +1,8 @@
-이름: 김시원
-한 줄 소개: 안녕하세요 잘부탁드립니다
-과제 난이도: 3점
-ss
+FBV: create_post
+![](./images/FBV.png)
+
+CBV : get_post
+![](./images/CBV_get.png)
+
+CBV : delete_post
+![](./images/CBV_delete.png)
