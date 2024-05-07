@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Post
 
+# 직렬화
 class PostSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only = True)
     title = serializers.CharField(max_length = 100)

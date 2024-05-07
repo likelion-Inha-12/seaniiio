@@ -148,3 +148,12 @@ class PostApiView(APIView):
         
         message = f"id: {pk}번 포스트 삭제 성공"
         return api_response(data = None, message = message, status = status.HTTP_200_OK) # 204여도 될 것 같아요
+    
+    # 역직렬화 테스트용 POST
+    def create(self, request):
+        postSerializer = PostSerializer(data = request.data)
+        if postSerializer.is_valid(): # 유효성 검사
+            postSerializer.save() # DB에 저장
+            return api_response(data = postSerializer.data, message = "포스트 생성 성공", status = status.HTTP_200_OK)
+        else: # 에러 처리
+            return api_response(data = None, message = postSerializer.errors, status = status.HTTP_400_BAD_REQUEST)
