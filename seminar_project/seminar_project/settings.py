@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '13.125.179.250',
-    'https://seaniiio.p-e.kr/']
+    'seaniiio.p-e.kr']
 
 
 # Application definition
