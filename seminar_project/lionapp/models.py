@@ -10,7 +10,7 @@ class Member(models.Model):
 # 게시글 모델
 # 제목, 내용, 생성일자 ← 의 필드를 갖고 있는 모델
 class Post(models.Model):
-    member_id = models.ForeignKey(Member, on_delete=models.CASCADE)
+    #member_id = models.ForeignKey(Member, on_delete=models.CASCADE)
     title = models.CharField(max_length=50) # 50글자가 최대인 문자열
     content = models.TextField(null=True, blank=True) # 글자 수 제한이 없는 긴 문자열
     create_at = models.DateTimeField(auto_now_add=True) # 처음 Post 생성시, 현재시간 저장
