@@ -114,13 +114,13 @@ def get_post_sorted(request):
 @api_view(['POST'])
 def create_post_v2(request):
 
-    member_id = request.data.get('member_id')
-    member = get_object_or_404(Member, id = member_id)
+    #member_id = request.data.get('member_id')
+    #member = get_object_or_404(Member, id = member_id)
 
     post = Post(
         title = request.data.get('title'),
         content = request.data.get('content'),
-        member_id = member
+        #member_id = member
     )
     post.save()
 
