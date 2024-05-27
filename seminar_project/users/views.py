@@ -39,7 +39,15 @@ def signup(request):
         user.set_password(password) # 비밀번호를 암호화
         user.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # rest_framework.request.Request에서 django.http.HttpRequest로 변환
+        http_request = request._request
+        login_response = login(http_request)
+
+        refresh_token = login_response.data.get('refresh_token')
+        access_token = login_response.data.get('access_token')
+
+        return Response({'refresh_token': refresh_token,
+                     'access_token': access_token}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
@@ -48,7 +56,7 @@ def login(request):
     id = request.data.get('id')
     password = request.data.get('password')
 
-    user = authenticate(id=id, password=password)
+    user = authenticate(username=id, password=password)
     if user is None:
         return Response({'message': '아이디 또는 비밀번호가 일치하지 않습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -57,3 +65,14 @@ def login(request):
 
     return Response({'refresh_token': str(refresh),
                      'access_token': str(refresh.access_token), }, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def refresh(request):
+    refresh_token = request.data.get('refresh')
+    try:
+        refresh = RefreshToken(refresh_token)
+        new_access_token = refresh.access_token
+        return Response({'new_access_token': str(new_access_token)}, status=status.HTTP_200_OK)
+    except:
+        return Response({'message': 'refresh token이 유효하지 않습니다.'}, status=status.HTTP_401_UNAUTHORIZED)
