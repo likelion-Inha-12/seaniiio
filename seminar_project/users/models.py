@@ -25,6 +25,12 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser): # 커스텀유저 만들 수 있음
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+    ]
+
+    id = models.CharField(max_length=15, unique=True, primary_key=True)
     email = models.EmailField(
         verbose_name='email',
         max_length=100,
@@ -33,11 +39,13 @@ class User(AbstractBaseUser): # 커스텀유저 만들 수 있음
     name = models.CharField(max_length=30)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    generation = models.IntegerField(default=0)
+    gender = models.CharField(default='M', max_length=1, choices=GENDER_CHOICES)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    USERNAME_FIELD = 'id'
+    REQUIRED_FIELDS = ['name', 'email', 'generation', 'gender']
 
     def __str__(self):
         return self.email
