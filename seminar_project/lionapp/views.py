@@ -11,6 +11,10 @@ from rest_framework.views import APIView
 from util.views import api_response
 from .serializers import PostSerializer
 from .models import *
+from drf_yasg.utils import swagger_auto_schema
+
+from rest_framework.decorators import authentication_classes
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # POST api
 def create_post(request):
@@ -111,16 +115,26 @@ def get_post_sorted(request):
 # week 5
 
 # FBV 이용
+
+@swagger_auto_schema(
+        method="POST", 
+        tags=["첫번째 view"],
+        operation_summary="post 생성 - FBV", 
+        operation_description="post를 생성합니다.",
+        request_body= PostSerializer,
+        responses={
+            201: '201에 대한 설명', 
+            400: '400에 대한 설명',
+            500: '500에 대한 설명'
+        }
+)
+@authentication_classes([JWTAuthentication])
 @api_view(['POST'])
 def create_post_v2(request):
-
-    #member_id = request.data.get('member_id')
-    #member = get_object_or_404(Member, id = member_id)
 
     post = Post(
         title = request.data.get('title'),
         content = request.data.get('content'),
-        #member_id = member
     )
     post.save()
 
@@ -129,12 +143,23 @@ def create_post_v2(request):
 
 # CBV
 class PostApiView(APIView):
+    authentication_classes = [JWTAuthentication]
 
-    # pk를 이용해서 object들을 가져오는 메서드
     def get_object(self, pk):
         post = get_object_or_404(Post, pk=pk)
         return post
 
+    @swagger_auto_schema(
+        # method="GET", 
+        tags=["첫번째 view"],
+        operation_summary="post 조회", 
+        operation_description="post를 조회합니다.",
+        responses={
+            201: '201에 대한 설명', 
+            400: '400에 대한 설명',
+            500: '500에 대한 설명'
+        }
+    )
     def get(self, request, pk):
         post = self.get_object(pk)
 
@@ -142,6 +167,17 @@ class PostApiView(APIView):
         message = f"id: {post.pk}번 포스트 조회 성공"
         return api_response(data = postSerializer.data, message = message, status = status.HTTP_200_OK)
     
+    @swagger_auto_schema(
+        # method="GET", 
+        tags=["첫번째 view"],
+        operation_summary="post 삭제", 
+        operation_description="post를 삭제합니다.",
+        responses={
+            201: '201에 대한 설명', 
+            400: '400에 대한 설명',
+            500: '500에 대한 설명'
+        }
+    )
     def delete(self, request, pk):
         post = self.get_object(pk)
         post.delete()
@@ -150,7 +186,20 @@ class PostApiView(APIView):
         return api_response(data = None, message = message, status = status.HTTP_200_OK) # 204여도 될 것 같아요
     
     # 역직렬화 테스트용 POST
-    def create(self, request):
+
+    @swagger_auto_schema(
+        # method="GET", 
+        tags=["첫번째 view"],
+        operation_summary="post 생성 - CBV", 
+        operation_description="post를 생성합니다.",
+        request_body= PostSerializer,
+        responses={
+            201: '201에 대한 설명', 
+            400: '400에 대한 설명',
+            500: '500에 대한 설명'
+        }
+    )
+    def post(self, request):
         postSerializer = PostSerializer(data = request.data)
         if postSerializer.is_valid(): # 유효성 검사
             postSerializer.save() # DB에 저장
